@@ -1,6 +1,15 @@
-import { useState } from 'react'
+
+
+import gsap from 'gsap';
+import { Draggable } from 'gsap/Draggable';
+
+gsap.registerPlugin(Draggable);
+
 import './index.css'
 import { Navbar, Welcome, Dock } from '#components'
+import { TerminalWindow } from '#windows/index.js'
+
+
 
 function App() {
 
@@ -9,6 +18,7 @@ function App() {
       <Navbar />
       <Welcome />
       <Dock />
+      <TerminalWindow />
     </main>
   )
 }
