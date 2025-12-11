@@ -7,7 +7,7 @@ import { WindowControls } from '#components'
 const Terminal = () => {
   return (
     <>
-        <div id ="window-header">
+        <div id="window-header">
             <WindowControls target="terminal" />
             <h2>Tech Stack</h2>
         </div>
