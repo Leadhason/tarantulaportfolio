@@ -1,4 +1,4 @@
-import React, { useRef, useLayoutEffect } from "react";
+import React, { useRef } from "react";
 import useWindowStore from "#store/window.js";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -33,12 +33,6 @@ const WindowWrapper = (Component, windowKey) => {
 
       return () => instance.kill();
     }, []);
-
-    useLayoutEffect(() => {
-      const el = ref.current;
-      if (!el) return;
-      el.style.display = isOpen ? "block" : "none";
-    }, [isOpen]);
 
     return (
       <section id={windowKey} ref={ref} style={{ zIndex }} className="absolute">
