@@ -2,7 +2,6 @@ import React from 'react'
 import { locations } from '#constants'
 import useLocationStore from '#store/location.js'
 import useWindowStore from '#store/window.js'
-import gsap from 'gsap';
 import { useGSAP } from '@gsap/react'
 import clsx from 'clsx'
 import { Draggable } from 'gsap/Draggable'
