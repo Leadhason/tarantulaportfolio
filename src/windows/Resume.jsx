@@ -15,6 +15,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 const Resume = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [retryKey, setRetryKey] = useState(0);
 
   const handleLoadSuccess = () => {
     setIsLoading(false);
@@ -24,6 +25,12 @@ const Resume = () => {
   const handleLoadError = (error) => {
     setIsLoading(false);
     setError(error.message || "Failed to load PDF");
+  };
+
+  const handleRetry = () => {
+    setIsLoading(true);
+    setError(null);
+    setRetryKey(prev => prev + 1);
   };
 
   return (
@@ -53,25 +60,30 @@ const Resume = () => {
         
         {error && (
           <div className="flex items-center justify-center h-full">
-            <div className="flex flex-col items-center gap-2 text-red-500">
+            <div className="flex flex-col items-center gap-3 text-red-500">
               <AlertCircle className="w-8 h-8" />
               <p className="text-sm">{error}</p>
-              <p className="text-xs text-gray-500">Please try downloading the file instead.</p>
+              <button
+                onClick={handleRetry}
+                className="px-4 py-2 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+              >
+                Retry
+              </button>
+              <p className="text-xs text-gray-500">Or download the file instead.</p>
             </div>
           </div>
         )}
 
-        {!error && (
-          <Document
-            file="/files/resume.pdf"
-            className="flex justify-center"
-            onLoadSuccess={handleLoadSuccess}
-            onLoadError={handleLoadError}
-            loading=""
-          >
-            <Page pageNumber={1} renderTextLayer renderAnnotationLayer />
-          </Document>
-        )}
+        <Document
+          key={retryKey}
+          file="/files/resume.pdf"
+          className="flex justify-center"
+          onLoadSuccess={handleLoadSuccess}
+          onLoadError={handleLoadError}
+          loading=""
+        >
+          <Page pageNumber={1} renderTextLayer renderAnnotationLayer />
+        </Document>
       </div>
     </>
   );
