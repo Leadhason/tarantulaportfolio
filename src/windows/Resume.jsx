@@ -1,5 +1,5 @@
-import React from "react";
-import { Download } from "lucide-react";
+import React, { useState } from "react";
+import { Download, Loader2, AlertCircle } from "lucide-react";
 import { WindowControls } from "#components";
 import WindowWrapper from "#hoc/WindowWrapper.jsx";
 
@@ -13,6 +13,19 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 const Resume = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const handleLoadSuccess = () => {
+    setIsLoading(false);
+    setError(null);
+  };
+
+  const handleLoadError = (error) => {
+    setIsLoading(false);
+    setError(error.message || "Failed to load PDF");
+  };
+
   return (
     <>
       <div id="window-header">
@@ -29,9 +42,36 @@ const Resume = () => {
         </a>
       </div>
       <div className="flex-1 overflow-y-auto p-4">
-        <Document file="/files/resume.pdf" className="flex justify-center">
-          <Page pageNumber={1} renderTextLayer renderAnnotationLayer />
-        </Document>
+        {isLoading && (
+          <div className="flex items-center justify-center h-full">
+            <div className="flex flex-col items-center gap-2">
+              <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+              <p className="text-sm text-gray-600">Loading PDF...</p>
+            </div>
+          </div>
+        )}
+        
+        {error && (
+          <div className="flex items-center justify-center h-full">
+            <div className="flex flex-col items-center gap-2 text-red-500">
+              <AlertCircle className="w-8 h-8" />
+              <p className="text-sm">{error}</p>
+              <p className="text-xs text-gray-500">Please try downloading the file instead.</p>
+            </div>
+          </div>
+        )}
+
+        {!error && (
+          <Document
+            file="/files/resume.pdf"
+            className="flex justify-center"
+            onLoadSuccess={handleLoadSuccess}
+            onLoadError={handleLoadError}
+            loading=""
+          >
+            <Page pageNumber={1} renderTextLayer renderAnnotationLayer />
+          </Document>
+        )}
       </div>
     </>
   );
