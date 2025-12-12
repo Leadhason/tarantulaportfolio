@@ -1,8 +1,8 @@
-import React, { useRef, useLayoutEffect } from 'react'
-import useWindowStore from '#store/window.js';
-import gsap from 'gsap'
+import React, { useRef, useLayoutEffect } from "react";
+import useWindowStore from "#store/window.js";
+import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { Draggable } from "gsap/Draggable"
+import { Draggable } from "gsap/Draggable";
 
 const WindowWrapper = (Component, windowKey) => {
   const Wrapped = (props) => {
@@ -16,18 +16,19 @@ const WindowWrapper = (Component, windowKey) => {
 
       el.style.display = "block";
 
-      gsap.fromTo(el,
-        { scale: 0.8, opacity:0, y: 40 },
-        { scale: 1, opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
+      gsap.fromTo(
+        el,
+        { scale: 0.8, opacity: 0, y: 40 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }
       );
     }, [isOpen]);
 
     useGSAP(() => {
       const el = ref.current;
-      if(!el) return;
+      if (!el) return;
 
       const [instance] = Draggable.create(el, {
-        onPress: () => focusWindow(windowKey), 
+        onPress: () => focusWindow(windowKey),
       });
 
       return () => instance.kill();
@@ -35,20 +36,22 @@ const WindowWrapper = (Component, windowKey) => {
 
     useLayoutEffect(() => {
       const el = ref.current;
-      if(!el) return;
+      if (!el) return;
       el.style.display = isOpen ? "block" : "none";
     }, [isOpen]);
 
     return (
-      <section id={windowKey} ref ={ref} style={{zIndex}} className="absolute">
-        <Component {...props} />
+      <section id={windowKey} ref={ref} style={{ zIndex }} className="absolute">
+        {isOpen && <Component {...props} />}
       </section>
     );
   };
 
-  Wrapped.displayName = `WindowWrapper(${Component.displayName || Component.name || `Component`})`;
+  Wrapped.displayName = `WindowWrapper(${
+    Component.displayName || Component.name || `Component`
+  })`;
 
   return Wrapped;
 };
 
-export default WindowWrapper
+export default WindowWrapper;
